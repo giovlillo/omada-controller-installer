@@ -1,4 +1,4 @@
-# Omada Controller Installer
+# Omada Controller Installer (TEST VERSION)
 This script automates the installation of the Omada Controller software on Ubuntu 16.04, 18.04, and 20.04. The script installs MongoDB 4.4 and OpenJDK-8 as dependencies, and then downloads and installs the latest version of the Omada Controller software from the official TP-Link website.
 
 ## Prerequisites
