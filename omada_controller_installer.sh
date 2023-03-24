@@ -1,4 +1,8 @@
 #!/bin/bash
+#title           :omada-controller-installer.sh
+#description     :Automated installation of the latest version of Omada Controller
+#supported       :Ubuntu 16.04, Ubuntu 18.04, Ubuntu 20.04
+#updated         :24/03/2023
 
 # Check OS version and exit if not Ubuntu 16.04, 18.04 or 20.04
 if ! [[ "$(lsb_release -r | awk '{print $2}')" =~ ^(16.04|18.04|20.04)$ ]]; then
