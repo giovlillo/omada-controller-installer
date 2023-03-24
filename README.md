@@ -9,6 +9,7 @@ To install the Omada Controller software, run the following command in your term
 
 
 ``` curl -s https://raw.githubusercontent.com/giovlillo/omada-controller-installer/main/omada_controller_installer.sh | sudo bash ```
+
 The installation process will begin, and the script will automatically download and install MongoDB 4.4, OpenJDK-8, and the latest version of the Omada Controller software.
 
 ## Usage
