@@ -15,7 +15,7 @@ echo "Installing MongoDB 4.4 and OpenJDK-8..."
 wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
 echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
 sudo apt-get update -qq
-sudo apt-get install -y openjdk-8-jre-headless mongodb-org
+sudo apt-get install -y openjdk-8-jre-headless mongodb-org jsvc curl
 
 # Install the latest version of Omada Controller
 echo "Installing the latest version of Omada Controller..."
