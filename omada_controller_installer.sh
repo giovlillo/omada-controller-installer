@@ -1,34 +1,30 @@
 #!/bin/bash
 
-# Check if user is root
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 
-   exit 1
+# Check OS version and exit if not Ubuntu 16.04, 18.04 or 20.04
+if ! [[ "$(lsb_release -r | awk '{print $2}')" =~ ^(16.04|18.04|20.04)$ ]]; then
+  echo "This script only supports Ubuntu 16.04, 18.04 or 20.04. Exiting."
+  exit 1
 fi
 
-# Check if running on supported Ubuntu versions
-if [[ $(lsb_release -rs) != "16.04" && $(lsb_release -rs) != "18.04" && $(lsb_release -rs) != "20.04" ]]; then
-    echo "This script can only be run on Ubuntu 16.04, 18.04, or 20.04"
-    exit 1
-fi
+# Update apt and install dependencies
+sudo apt update
+sudo apt install -y openjdk-8-jre-headless jsvc curl
 
-# Install required dependencies
-apt-get update && apt-get install -y curl openjdk-8-jdk jsvc
+# Install MongoDB 4.4
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+sudo apt update
+sudo apt install -y mongodb-org
 
-# Add MongoDB repository and install MongoDB 4.4
-wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/4.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-apt-get update && apt-get install -y mongodb-org
+# Install Omada Controller
+omada_url=$(curl -s https://www.tp-link.com/en/support/download/omada-software-controller/ | grep -o -m 1 'https://static.tp-link.com/[^"]*x64.deb')
+omada_filename=$(basename "$omada_url")
+wget "$omada_url"
+sudo dpkg -i "$omada_filename"
+sudo apt install -fy
 
-# Download Omada SDN Controller package
-curl -s https://www.tp-link.com/en/support/download/omada-software-controller/ | grep -Eo 'https://static.tp-link.com/'$(curl -s https://www.tp-link.com/en/support/download/omada-software-controller/ | grep -Eo 'Omada_SDN_Controller_v[0-9]+\.[0-9]+\.[0-9]+_Linux_x64\.deb')'[a-zA-Z0-9/\._-]+' | xargs curl -O
+# Get server IP address
+ip=$(hostname -I | awk '{print $1}')
 
-# Install Omada SDN Controller package
-dpkg -i Omada_SDN_Controller_*.deb
+echo "Omada Controller installed successfully at http://$ip:8088"
 
-# Start Omada SDN Controller service
-systemctl start omada.service
-
-# Show IP address and port to access Omada SDN Controller web interface
-IP=$(ip -4 route get 8.8.8.8 | awk '{print $7}')
-echo "Omada SDN Controller is running at http://$IP:8088"
