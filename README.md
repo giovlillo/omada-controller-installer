@@ -15,7 +15,7 @@ The installation process will begin, and the script will automatically download 
 ## Usage
 Once the installation is complete, you can access the Omada Controller by opening a web browser and navigating to the following URL:
 
-``` https://<server-ip-address>:8043```
+``` https://<server-ip-address>:8088```
 
 Replace <server-ip-address> with the IP address of the machine where the Omada Controller is installed.
 
